@@ -9,7 +9,7 @@ import {NewMessageComponent} from './new-message/new-message.component';
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.css',
   imports: [MessagesListComponent, NewMessageComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,//disactivate logs for this component and its child components
+  changeDetection: ChangeDetectionStrategy.OnPush,//changes if an input changed of this component or its child or its signal
 })
 export class MessagesComponent {
   get debugOutput() {

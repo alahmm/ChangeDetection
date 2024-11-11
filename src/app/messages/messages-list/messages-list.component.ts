@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {MessagesService} from "../messages.service";
 
 @Component({
@@ -8,11 +8,21 @@ import {MessagesService} from "../messages.service";
   styleUrl: './messages-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MessagesListComponent {
+export class MessagesListComponent implements OnInit{
   private messagesService = inject(MessagesService);
-  messages = this.messagesService.allMessages; //the signal will be stored in that property
+  private cdRef = inject(ChangeDetectorRef); //to detect the changement for showing saved messages
+
+  get messages() {
+    return this.messagesService.allMessages;
+  }
+ // messages = this.messagesService.allMessages; //the signal will be stored in that property, when not using signal use getter
   get debugOutput() {
     console.log('[MessagesList] "debugOutput" binding re-evaluated.');
     return 'MessagesList Component Debug Output';
+  }
+  ngOnInit() {
+    this.messagesService.messages$.subscribe(() => {
+      this.cdRef.markForCheck();
+    });//subscribe to events emitted from the service, that will be executed by rxjs
   }
 }
